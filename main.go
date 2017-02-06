@@ -43,11 +43,12 @@ func getArgs() []string {
 func output(data interface{}, template string) {
 	jsonData, err := json.Marshal(data)
 	if err != nil {
-		fmt.Printf("%s\n", err)
+		fmt.Printf("COGCMD_ERROR: %s\n", err)
 	} else {
 		var prettyJSON bytes.Buffer
 		json.Indent(&prettyJSON, jsonData, "", "  ")
 		if len(template) > 0 {
+			fmt.Printf("COGCMD_INFO: Using template %s\n", template)
 			fmt.Printf("COG_TEMPLATE: %s\n", template)
 		}
 		println("JSON")
@@ -57,11 +58,13 @@ func output(data interface{}, template string) {
 
 func listJobs() {
 	projectid := getProject()
+	fmt.Printf("COGCMD_INFO: Listing jobs in project %s\n", projectid)
 
 	client := rundeck.NewClientFromEnv()
 	data, err := client.ListJobs(projectid)
 	if err != nil {
-		fmt.Printf("%s\n", err)
+		fmt.Printf("COGCMD_ERROR: %s\n", err)
+		fmt.Printf("ERROR: Cannot list jobs in project %s\n", projectid)
 	} else {
 		output(&data, "joblist")
 	}
@@ -70,21 +73,26 @@ func listJobs() {
 func runJob(jobArray []string, args string) {
 	projectid := getProject()
 	jobname := strings.Join(jobArray, " ")
+	fmt.Printf("COGCMD_INFO: Running %s in project %s\n", jobname, projectid)
 
 	client := rundeck.NewClientFromEnv()
 	data, err := client.FindJobByName(jobname, projectid)
 	if err != nil {
-		fmt.Printf("%s\n", err)
+		fmt.Printf("COGCMD_ERROR: %s\n", err)
+		fmt.Printf("ERROR: Cannot find job %s in project %s\n", jobname, projectid)
 	} else {
+		fmt.Printf("COGCMD_INFO: Found job %s\n", data.ID)
 		jobopts := rundeck.RunOptions{
 			RunAs:     "",
 			LogLevel:  "",
 			Filter:    "",
 			Arguments: args,
 		}
+		fmt.Printf("COGCMD_INFO: Running job %s with args %s\n", data.ID, args)
 		res, err := client.RunJob(data.ID, jobopts)
 		if err != nil {
-			fmt.Printf("%s\n", err)
+			fmt.Printf("COGCMD_ERROR: %s\n", err)
+			println("ERROR: Cannot run job %s in project %s", data.ID, projectid)
 			os.Exit(1)
 		} else {
 			executionURL := fmt.Sprintf("%s/project/%s/execution/show/%s",
@@ -100,6 +108,7 @@ func main() {
 	command := flag.Args()[0]
 	args := getArgs()
 	if len(command) > 0 {
+		fmt.Printf("COGCMD_INFO: Running command: %s\n", command)
 		switch command {
 		case "list-jobs":
 			listJobs()
@@ -107,10 +116,12 @@ func main() {
 			jobArgs := os.Getenv("COG_OPT_ARGS")
 			runJob(args, jobArgs)
 		default:
-			println("ERROR: unknown command.")
+			fmt.Printf("COGCMD_ERROR: unknown command: %s\n", command)
+			fmt.Printf("ERROR: unknown command: %s\n", command)
 			os.Exit(1)
 		}
 	} else {
+		println("COGCMD_ERROR: missing required arguments.")
 		println("ERROR: missing required arguments.")
 		os.Exit(1)
 	}
