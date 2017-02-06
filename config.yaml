@@ -29,7 +29,7 @@ permissions:
   - rundeck:read
   - rundeck:run
 docker:
-  image: "steeef/cog-go-rundeck"
+  image: "cog-go-rundeck"
   tag: "latest"
 commands:
   list:
