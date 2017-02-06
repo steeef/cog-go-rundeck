@@ -48,7 +48,7 @@ commands:
         required: false
         short_flag: p
   run:
-    executable: exec "/bundle/run.sh"
+    executable: "/bundle/run.sh"
     description: "Run a job by name."
     long_description: |
       Run a specific job by its name. If "--prj" is not specified, use the default.
