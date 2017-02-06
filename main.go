@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"strings"
 
 	rundeck "github.com/lusis/go-rundeck/src/rundeck.v17"
 )
@@ -66,14 +67,45 @@ func listJobs() {
 	}
 }
 
+func runJob(jobArray []string, args string) {
+	projectid := getProject()
+	jobname := strings.Join(jobArray, " ")
+
+	client := rundeck.NewClientFromEnv()
+	data, err := client.FindJobByName(jobname, projectid)
+	if err != nil {
+		fmt.Printf("%s\n", err)
+	} else {
+		jobopts := rundeck.RunOptions{
+			RunAs:     "",
+			LogLevel:  "",
+			Filter:    "",
+			Arguments: args,
+		}
+		res, err := client.RunJob(data.ID, jobopts)
+		if err != nil {
+			fmt.Printf("%s\n", err)
+			os.Exit(1)
+		} else {
+			executionURL := fmt.Sprintf("%s/project/%s/execution/show/%s",
+				os.Getenv("RUNDECK_URL"), projectid, res.Executions[0].ID)
+			fmt.Printf("Job %s is %s: %s\n",
+				res.Executions[0].ID, res.Executions[0].Status, executionURL)
+		}
+	}
+}
+
 func main() {
 	flag.Parse()
 	command := flag.Args()[0]
-	//args := getArgs()
+	args := getArgs()
 	if len(command) > 0 {
 		switch command {
 		case "list-jobs":
 			listJobs()
+		case "run-job":
+			jobArgs := os.Getenv("COG_OPT_ARGS")
+			runJob(args, jobArgs)
 		default:
 			println("ERROR: unknown command.")
 			os.Exit(1)
