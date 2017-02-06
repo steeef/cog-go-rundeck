@@ -12,3 +12,7 @@ RUN apk --update add ${BUILD_DEPS} \
     && rm -rf /go \
     && apk del ${BUILD_DEPS} \
     && rm -rf /var/cache/apk/*
+
+COPY scripts/* /bundle/
+WORKDIR /bundle
+RUN chmod +x ./*.sh

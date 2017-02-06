@@ -4,7 +4,7 @@ name: rundeck
 description: "Rundeck interface via go-rundeck"
 author: "Stephen Price <stephen@stp5.net>"
 homepage: "https://github.com/steeef/cog-go-rundeck"
-version: "0.3.0"
+version: "0.3.3"
 long_description: |
   A wrapper for [go-rundeck](https://github.com/lusis/go-rundeck).
 config:
@@ -29,11 +29,11 @@ permissions:
   - rundeck:read
   - rundeck:run
 docker:
-  image: "cog-go-rundeck"
+  image: "steeef/cog-go-rundeck"
   tag: "latest"
 commands:
   list:
-    executable: exec "/bundle/cog-go-rundeck" "list-jobs"
+    executable: "/bundle/list.sh"
     description: "List available jobs."
     examples: |
       rundeck:list --prj myproject
@@ -48,7 +48,7 @@ commands:
         required: false
         short_flag: p
   run:
-    executable: exec "/bundle/cog-go-rundeck" "run-job"
+    executable: exec "/bundle/run.sh"
     description: "Run a job by name."
     long_description: |
       Run a specific job by its name. If "--prj" is not specified, use the default.
