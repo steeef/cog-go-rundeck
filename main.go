@@ -1,6 +1,8 @@
 package main
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 
 	rundeck "github.com/lusis/go-rundeck/src/rundeck.v17"
@@ -18,6 +20,13 @@ func main() {
 	if err != nil {
 		fmt.Printf("%s\n", err)
 	} else {
-		fmt.Printf("%+v\n", data)
+		jsonData, err := json.Marshal(data)
+		if err != nil {
+			fmt.Printf("%s\n", err)
+		} else {
+			var prettyJSON bytes.Buffer
+			json.Indent(&prettyJSON, jsonData, "", "  ")
+			println(string(prettyJSON.Bytes()))
+		}
 	}
 }
