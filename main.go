@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"flag"
 	"fmt"
 	"os"
 	"strconv"
@@ -38,6 +39,21 @@ func getArgs() []string {
 	return args
 }
 
+func output(data interface{}, template string) {
+	jsonData, err := json.Marshal(data)
+	if err != nil {
+		fmt.Printf("%s\n", err)
+	} else {
+		var prettyJSON bytes.Buffer
+		json.Indent(&prettyJSON, jsonData, "", "  ")
+		if len(template) > 0 {
+			fmt.Printf("COG_TEMPLATE: %s\n", template)
+		}
+		println("JSON")
+		println(string(prettyJSON.Bytes()))
+	}
+}
+
 func listJobs() {
 	projectid := getProject()
 
@@ -46,22 +62,16 @@ func listJobs() {
 	if err != nil {
 		fmt.Printf("%s\n", err)
 	} else {
-		jsonData, err := json.Marshal(data)
-		if err != nil {
-			fmt.Printf("%s\n", err)
-		} else {
-			var prettyJSON bytes.Buffer
-			json.Indent(&prettyJSON, jsonData, "", "  ")
-			println(string(prettyJSON.Bytes()))
-		}
+		output(&data, "joblist")
 	}
-
 }
 
 func main() {
-	args := getArgs()
-	if len(args) > 0 {
-		switch args[0] {
+	flag.Parse()
+	command := flag.Args()[0]
+	//args := getArgs()
+	if len(command) > 0 {
+		switch command {
 		case "list-jobs":
 			listJobs()
 		default:
