@@ -49,10 +49,10 @@ func output(data interface{}, template string) {
 		json.Indent(&prettyJSON, jsonData, "", "  ")
 		if len(template) > 0 {
 			fmt.Printf("COGCMD_INFO: Using template %s\n", template)
-			fmt.Printf("COG_TEMPLATE: %s\n", template)
+			fmt.Printf("COG_TEMPLATE: %s\nJSON\n%s", template, string(prettyJSON.Bytes()))
+		} else {
+			fmt.Printf("JSON\n%s", string(prettyJSON.Bytes()))
 		}
-		println("JSON")
-		println(string(prettyJSON.Bytes()))
 	}
 }
 
