@@ -32,11 +32,11 @@ docker:
   image: "steeef/cog-go-rundeck"
   tag: "latest"
 commands:
-  list:
-    executable: "/bundle/list.sh"
+  list-jobs:
+    executable: "/bundle/list-jobs.sh"
     description: "List available jobs."
     examples: |
-      rundeck:list --prj myproject
+      rundeck:list-jobs --prj myproject
     long_description: |
       List jobs in a project. If "--prj" is not specified, use the default.
     rules:
@@ -71,6 +71,11 @@ commands:
         required: false
         short_flag: a
 templates:
+  job_execution:
+    body: |
+      ~each var=$results~
+      Job ~item.id~ is **~item.status~**: ~item.href~
+      ~end~
   joblist:
     body: |
       ~each var=$results~
