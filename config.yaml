@@ -4,7 +4,7 @@ name: rundeck
 description: "Rundeck interface via go-rundeck"
 author: "Stephen Price <stephen@stp5.net>"
 homepage: "https://github.com/steeef/cog-go-rundeck"
-version: "0.3.5"
+version: "0.3.6"
 long_description: |
   A wrapper for [go-rundeck](https://github.com/lusis/go-rundeck).
 config:
@@ -74,7 +74,7 @@ templates:
   job_execution:
     body: |
       ~each var=$results~
-      Job ~item.id~ is **~item.status~**: ~item.href~
+      Job ~item.ID~ is **~item.Status~**: ~item.Href~
       ~end~
   joblist:
     body: |
