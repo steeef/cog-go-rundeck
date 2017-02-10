@@ -4,7 +4,7 @@ name: rundeck
 description: "Rundeck interface via go-rundeck"
 author: "Stephen Price <stephen@stp5.net>"
 homepage: "https://github.com/steeef/cog-go-rundeck"
-version: "0.3.3"
+version: "0.3.5"
 long_description: |
   A wrapper for [go-rundeck](https://github.com/lusis/go-rundeck).
 config:
