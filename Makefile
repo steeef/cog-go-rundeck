@@ -1,9 +1,12 @@
-.DEFAULT_GOAL := all
+NAME=cog-go-rundeck
 
-all: buildgo builddocker
+all: install
 
-buildgo:
-	GO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o cog-go-rundeck main.go
+clean:
+	docker rmi ${NAME} &>/dev/null || true
 
-builddocker:
-	docker build -t cog-go-rundeck .
+build:
+	GO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ${NAME} main.go
+
+install: clean build
+	docker build -t ${NAME} .
