@@ -4,7 +4,7 @@ name: rundeck
 description: "Rundeck interface via go-rundeck"
 author: "Stephen Price <stephen@stp5.net>"
 homepage: "https://github.com/steeef/cog-go-rundeck"
-version: "0.3.3"
+version: "0.3.9"
 long_description: |
   A wrapper for [go-rundeck](https://github.com/lusis/go-rundeck).
 config:
@@ -23,7 +23,7 @@ config:
     - var: RUNDECK_PASSWORD
     - var: RUNDECK_DEFAULT_PROJECT
       description: |
-        Optional. The default Rundeck project to use if not specified with `--prj`
+        Optional. The default Rundeck project to use if not specified with `--project`
         in commands.
 permissions:
   - rundeck:read
@@ -36,13 +36,13 @@ commands:
     executable: "/bundle/list.sh"
     description: "List available jobs."
     examples: |
-      rundeck:list --prj myproject
+      rundeck:list --project myproject
     long_description: |
-      List jobs in a project. If "--prj" is not specified, use the default.
+      List jobs in a project. If "--project" is not specified, use the default.
     rules:
       - "must have rundeck:read"
     options:
-      prj:
+      project:
         description: "Project ID of jobs to list."
         type: string
         required: false
@@ -51,16 +51,16 @@ commands:
     executable: "/bundle/run.sh"
     description: "Run a job by name."
     long_description: |
-      Run a specific job by its name. If "--prj" is not specified, use the default.
+      Run a specific job by its name. If "--project" is not specified, use the default.
     examples: |
-      rundeck:run --prj myproject myjob
-      rundeck:run --prj myproject --args "some arguments" myjob
+      rundeck:run --project myproject myjob
+      rundeck:run --project myproject --args "some arguments" myjob
       rundeck:run myjob
     rules:
       - "must have rundeck:run"
     arguments: "<jobname>"
     options:
-      prj:
+      project:
         description: "Project ID of jobs to list."
         type: string
         required: false
