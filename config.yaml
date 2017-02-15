@@ -32,8 +32,8 @@ docker:
   image: "steeef/cog-go-rundeck"
   tag: "latest"
 commands:
-  list:
-    executable: "/bundle/list.sh"
+  list-jobs:
+    executable: "/bundle/list-jobs.sh"
     description: "List available jobs."
     examples: |
       rundeck:list --project myproject
@@ -71,6 +71,11 @@ commands:
         required: false
         short_flag: a
 templates:
+  job_execution:
+    body: |
+      ~each var=$results~
+      Job ~$item.ID~ is **~$item.Status~**: ~$item.HRef~
+      ~end~
   joblist:
     body: |
       ~each var=$results~

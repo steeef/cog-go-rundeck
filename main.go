@@ -95,10 +95,7 @@ func runJob(jobArray []string, args string) {
 			println("ERROR: Cannot run job %s in project %s", data.ID, projectid)
 			os.Exit(1)
 		} else {
-			executionURL := fmt.Sprintf("%s/project/%s/execution/show/%s",
-				os.Getenv("RUNDECK_URL"), projectid, res.Executions[0].ID)
-			fmt.Printf("Job %s is %s: %s\n",
-				res.Executions[0].ID, res.Executions[0].Status, executionURL)
+			output(&res.Executions[0], "job_execution")
 		}
 	}
 }
